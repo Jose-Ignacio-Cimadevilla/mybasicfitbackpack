@@ -1,59 +1,110 @@
-# Build applications with GitHub Copilot agent mode
+# Business Observability Platform
 
-<!-- ![](https://github.com/Jose-Ignacio-Cimadevilla/mybasicfitbackpack/actions/workflows/0-start-course.yml/badge.svg?branch=main) -->
-<img src="https://github.com/user-attachments/assets/8c45e716-1d95-473b-8923-dbbbf0f924b2" alt="octofit-tracker-app" width="30%" height="30%"/>
+## Rationale
 
-_Build an application with GitHub Copilot agent mode in less than an hour._
+**Metrics description and architecture**(https://maersk-tools.atlassian.net/wiki/x/fYCYEys)
 
-## Welcome
+Business  Observability Platform provides end-to-end traceability on digitised and standardised Service Delivery Ocean processes, while creating clear connections between business outcomes and operational tasks through Maersk aligned metric structure. The visibility and traceability that business observability provides will unlock The Maersk Way Problem Solving & Operational Excellence, allowing operators to create a path for green business outcomes by viewing the operational work created through INDEX tasks.
 
-People love how GitHub Copilot helps them write code faster and with fewer errors.
-But what if GitHub could create a full stack application for your job role based on requirements
-written in natural language.
-In this exercise, we will prompt GitHub Copilot agent mode to create us a complete application.
+## Definitions and desired metric structure
 
-- **Who is this for**: Intermediate developers familiar with GitHub Copilot, basic GitHub, and basic web development
-- **What you'll learn**: We'll introduce GitHub Copilot agent mode and how to use it for application development.
-- **What you'll build**: You'll use GitHub Copilot agent mode to create a fitness application as the gym teacher of a high school.
-- **How long**: This course takes less than one hour to complete.
+The following table states the different metric types in scope and the intended metric structure.
 
-In this exercise, you will:
+| Metric type | Description | Example |
+|---|---|---|
+| **Outcome** | Measures end-state results, such as cost reduction, efficiency gained, risk lowered, etc. that the wide organisation state as objectives. It answers the question: _which is our goal as a business?_ | Bunker cost reduction |
+| **Performance / Leading** | Measures the current trajectory, for instance, throughput, cycle time, SLA compliance… before the outcome is fully realised. A leading signal that lets teams act before results are locked in. It answers the question: _how close are we to reach our goal?_ | Bunker waste reduction |
+| **Process** | Measures step-level health — adherence, bottlenecks, accuracy... The diagnostic layer that explains why a leading metric is degrading. It answers the question: _where in the process is performance breaking down?_ | Estimated Time of Arrival (ETA) accuracy |
+| **Adoption** | Measures coverage and engagement, for instance percentage of eligible cases on-platform, active users, workaround rate… it checks the validity of the approach, low adoption means the other metrics only describe a fraction of reality. It answers the question: _how much of the process is actually running through the platform?_ | Percentage of ETA sent to vessel |
 
-1. Start up a preconfigured development environment for making a full stack application.
-2. Prompt in GitHub Copilot Chat and select the edit tab and select agent mode from the edit/agent drop down.
-3. Try creating the application with GPT-4o.
-4. Try other LLM models to see other output.
+The order of these metrics mirrors the way an individual looks at the process: start with outcomes, such as "is the business goal being met"? If not, move to performance metrics to see whether it's a trend or a one-off case. If performance is degrading, process metrics pinpoint which step or task is the troublemaker. Adoption sits last because it reframes everything above it: a 90% SLA compliance rate looks healthy until adoption reveals only 40% of cases are running through the platform.
 
-### How to start this exercise
+Ordered this way, each layer answers the natural next question raised by the one before it.
 
-1. Right-click **Copy Exercise** and open the link in a new tab.
+## Collaboration framework
 
-   <a id="copy-exercise">
-      <img src="https://img.shields.io/badge/📠_Copy_Exercise-AAA" height="25pt"/>
-   </a>
+### Introduction
 
-2. In the new tab, most of the fields will automatically fill in for you.
+Once business needs are established and clear, several things will need to happen before a dashboard with relevant information is available to support colleagues from operations. Things like identifying the right data source, getting access to datasets or building new integrations, developing one (or many) data-transformation pipeline(s), deploying jobs and data quality checks, defining the dashboard user interface…
 
-   - For owner, choose your personal account or an organization to host the repository.
-   - We recommend creating a public repository, as private repositories will use [Actions minutes](https://docs.github.chttps://github.com/Jose-Ignacio-Cimadevilla/mybasicfitbackpack/billing/managing-billing-for-github-actions/about-billing-for-github-actions).
-   - Scroll down and click the **Create repository** button at the bottom of the form.
+All these steps will require different teams with diverse knowledge and expertise to work together and collaborate. This section defines a common framework to allow these teams to use the same definitions, processes and mental models in order to successfully complete what is needed.
 
-3. After your new repository is created, wait about 20 seconds for the exercise to be prepared and buttons updated. You will continue working from your copy of the exercise.
+### Scope and responsibility
 
-   - The **Copy Exercise** button will deactivate, changing to gray.
-   - The **Start Exercise** button will activate, changing to green.
-   - You will likely need to refresh the page.
+**Business Observability team**
+- Capture and refine business requirements from the product organization
+- Maintain and govern the shared metric store structure
+- Implement metric calculation pipelines and define metric datasets
+- Build and manage dashboards
+- Run onboarding and/or coordination sessions
+- Monitor metric-level dataset data quality
 
-4. Click **Start Exercise**. Follow the step-by-step instructions and feedback will be provided as you progress.
+**Domain-specific team**
+- Implement and maintain domain dataset ingestion pipelines, including new cross-domain integrations (Kafka topics or APIs)
+- Own domain dataset data quality
+- Manage and respond to alerts for domain-level datasets
+- Notify the platform of upstream data schema changes
 
-   <a id="start-exercise" href="https://github.com/Jose-Ignacio-Cimadevilla/mybasicfitbackpack/issues/1">
-      <img src="https://img.shields.io/badge/🚀_Start_Exercise-008000" height="25pt"/>
-   </a>
+### Pre-requisites
 
-> ❕ **Important:** The **Start Exercise** button will activate after copying the repository. You will probably need to refresh the page.
+#### Requirements refinement
 
----
+The BOP team will capture and refine the business requirements for a particular dashboard using a set of different metrics. Each metric must be mapped to an outcome goal (cost reduction, efficiency, risk, CX, etc.). No metric should enter the platform without a declared goal alignment — this forces the team to answer "why does this metric matter" before writing a single line of implementation.
 
-[Review the GitHub status page](https://www.githubstatus.com/)
+> **Expected output:** A collection of Jira work items that are refined, with clear acceptance criteria.
 
-&copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+#### Data sources
+
+The first step when developing a new metric is to identify data dependencies for the required metrics, as the teams managing source-of-truth applications may need to develop new interfaces for data sourcing into the data ingestion layer.
+
+For instance, if there is a requirement to build a dashboard showing capacity utilisation percentage, then datasets from CAPI (current/forecasted container utilisation), COMET (container load/discharge events and vessel release) and Captura (vessel capacity or intake) will likely be required. Are all these datasets in Pipedream already? If not, can the data be sourced into Pipedream from an existing Retina topic or API? If that is not the case, a new requirement needs to be raised towards the team managing the source-of-truth application, and coordination and prioritisation must happen.
+
+Missing data sources must be identified quickly, as engineering teams are usually busy with business deliveries or other priorities.
+
+> **Expected output:** A specific and detailed list of identified domain-level datasets readily available for use to calculate required metrics. Additionally, if no already existing datasets are identified, a collection of refined Jira work items with clear acceptance criteria in the backlog of the team managing the source-of-truth application. Ideally these work items will have a clear delivery timeline.
+
+#### Access
+
+Once the source and potential datasets are identified, if access is not already in place, an access request needs to be raised. Depending on the solution hosting the data:
+
+- **Pipedream:** [Access Control](https://maersk-digital.atlassian.net/wiki/spaces/PIPEDREAM/pages/access-control)
+- **Maestro:** [Databook](https://databook.maersk.com)
+- **SafeAccess (SSAS Cubes):** [https://safeaccess.azurewebsites.net/home](https://safeaccess.azurewebsites.net/home)
+
+> **Expected output:** BOP engineers can access and read the identified datasets, and there is an understanding of the schema and information included there.
+
+### Development standards
+
+#### Job and dataset granularity
+
+Ideally each job must only generate a single dataset with one metric granularity. For instance, if there is a need to present long-term ETA accuracy, the job should only calculate that — nothing more — and then store the result in a single Pipedream dataset or table. This promotes dataset reusability and flexibility, avoiding having multiple jobs calculating the same metrics.
+
+#### Naming conventions
+
+- **Pipedream tenant for metric calculation and storage:** [`tenants/indexsymphony/observability-platform`](https://github.com/Maersk-Global/pipedream/tree/main/tenants/indexsymphony/observability-platform)
+- **Pipedream tenant for domain-level datasets:** domain application dependent
+- **Pipedream job/dataset name:** `observability_[metric_name]_[metric_type]`
+  - Example: `observability_longtermETA_accuracy`
+
+#### Datasets, processing jobs and dashboard hierarchy
+
+The diagram below illustrates the layered data flow from domain datasets through metric calculation jobs into the composite dashboard.
+
+```mermaid
+flowchart TD
+    A[Dataset A] --> MX((Metric X\ncalculation logic))
+    B[Dataset B] --> MX
+    B --> MY((Metric Y\ncalculation logic))
+    C[Dataset C] --> MX
+    C --> MY
+    D[Dataset D] --> MY
+
+    MX --> DX[Metric X dataset]
+    MY --> DY[Metric Y dataset]
+
+    DX --> CD[Composite dashboard]
+    DY --> CD
+```
+
+Domain datasets (rectangles at the bottom of the flow) are owned by domain-specific teams. Shared datasets — those feeding more than one metric — highlight cross-domain dependencies that must be coordinated early. Metric calculation logic (ellipses) is owned by the BOP team and produces isolated metric datasets, each consumed by one or more dashboards.
+
