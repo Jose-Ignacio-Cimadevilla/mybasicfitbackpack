@@ -65,9 +65,9 @@ Additionally each metric must have a designated owner in the product organizatio
 
 #### How to identify the datasets that are needed?
 
-The first step when developing a new metric is to identify data dependencies for the required metrics, as the teams managing source-of-truth applications may need to develop new interfaces for data sourcing into the data ingestion layer.
+The first step when developing a new metric is to identify data dependencies, as the teams managing source-of-truth applications may need to develop new interfaces for data sourcing into Pipedream.
 
-For instance, if there is a requirement to build a dashboard showing capacity utilisation percentage, then datasets from CAPI (current/forecasted container utilisation), COMET (container load/discharge events and vessel release) and Captura (vessel capacity or intake) will likely be required. Are all these datasets in Pipedream already? If not, can the data be sourced into Pipedream from an existing Retina topic or API? By answering these questions, you will decide whether a new requirement needs to be raised towards the team managing the source-of-truth application, so coordination and prioritisation must happen.
+For instance, if there is a requirement to build a dashboard showing capacity utilisation percentage,  datasets from CAPI (current/forecasted container utilisation), COMET (container load/discharge events and vessel release) and Captura (vessel capacity or intake) will likely be required. Are all these datasets in Pipedream already? If not, can the data be sourced into Pipedream from an existing Retina topic or API? By answering these questions, you will decide whether a new requirement needs to be raised towards the team managing the source-of-truth application, so coordination and prioritisation must happen.
 
 Missing data sources must be identified quickly, as engineering teams are usually busy with business deliveries or other priorities.
 
@@ -85,28 +85,28 @@ in Retina
 or an API?}
     C --> E[End]
     D --> |Yes| F[Raise a request
-for the relevant 
+to the relevant 
 domain team to source
 data in Pipedream]
     D -->|No| G[Raise a request
-for the relevant 
+to the relevant 
 domain team to publish
-data in Retina or using an API]
+data in Retina/API]
     G --> F
     F --> C
 ```
 
-> **Expected output:** A specific and detailed list of identified domain-level datasets readily available for use to calculate required metrics. Additionally, if no already existing datasets are identified, a collection of refined Jira work items with clear acceptance criteria in the backlog of the team managing the source-of-truth application. Ideally these work items will have a clear delivery timeline.
+> **Expected output:** A list of identified domain-level datasets readily available for use to calculate required metrics. Additionally, for no existing datasets, a collection of refined Jira work items with clear acceptance criteria, in the backlog of the team managing the source-of-truth application. Ideally these work items will have a clear delivery timeline.
 
-#### How can I access the required data?
+#### How can I access the datasets?
 
-Once the source and potential datasets are identified, if access is not already in place, an access request needs to be raised. Depending on the solution hosting the data:
+Once the source and potential datasets are identified, if access is not already in place, a request needs to be raised, depending on the solution hosting the data:
 
 - **Pipedream:** [Access Control](https://maersk-digital.atlassian.net/wiki/spaces/PIPEDREAM/pages/access-control)
 - **Maestro:** [Databook](https://databook.maersk.com)
 - **SafeAccess (SSAS Cubes):** [https://safeaccess.azurewebsites.net/home](https://safeaccess.azurewebsites.net/home)
 
-> **Expected output:** BOP engineers can access and read the identified datasets, and there is an understanding of the schema and information included there.
+> **Expected output:** BOP engineers can access and read the required datasets, and there is an understanding of the schema and information included there.
 
 ### Development standards
 
@@ -118,8 +118,10 @@ Ideally each Pipedream job must only generate one metric dataset. For instance, 
 
 - **Pipedream tenant for metric calculation and storage:** [`tenants/indexsymphony/observability-platform`](https://github.com/Maersk-Global/pipedream/tree/main/tenants/indexsymphony/observability-platform)
 - **Pipedream tenant for domain-level datasets:** domain application dependent
-- **Pipedream job/dataset name:** `observability_{domain}_{metric_name}_{metric_type}`
-  - Examples: `observability_scheduling_longtermETA_accuracy`, `observability_capacity_headhaul_utilization` or `observability_workflow_tasksresolved_percentage`
+- **Pipedream job/dataset name:** `observability_{domain}_{metric_name}_{metric_type}` with examples:   
+   - `observability_scheduling_longtermETA_accuracy`
+   - `observability_capacity_headhaul_utilization`
+   - `observability_workflow_tasksresolved_percentage`
 
 The metric owner from product organization should be added in the metadata section of the corresponding Pipeline job deployment file.
 
